@@ -1,32 +1,50 @@
 import pyttsx3
 import speech_recognition as sr
 
-engine = pyttsx3.init()
-engine.setProperty("rate", 175)
-
+# -------------------------
+# TTS ENGINE (REINIT EACH TIME)
+# -------------------------
 
 def speak(text: str):
-    engine.say(text)
-    engine.setProperty("volume", 1.0)
-    engine.runAndWait()
+    if not text:
+        return
+
+    try:
+        engine = pyttsx3.init()   # fresh engine every time
+        engine.setProperty("rate", 175)
+
+        engine.say(str(text))
+        engine.runAndWait()
+
+        del engine
+
+    except Exception as e:
+        print("Speech Error:", repr(e))
+
+
+# -------------------------
+# SPEECH TO TEXT
+# -------------------------
+
+recognizer = sr.Recognizer()
+mic = sr.Microphone()
+
+with mic as source:
+    recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
 
 def listen():
-    recognizer = sr.Recognizer()
-
     try:
-        with sr.Microphone() as source:
+        with mic as source:
             print("Listening...")
-            recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
             audio = recognizer.listen(
                 source,
-                timeout=5,            # waits max 5 sec for speech
-                phrase_time_limit=6   # max speech length
+                timeout=5,
+                phrase_time_limit=6
             )
 
         text = recognizer.recognize_google(audio)
-        print("You:", text)
         return text.lower().strip()
 
     except sr.WaitTimeoutError:

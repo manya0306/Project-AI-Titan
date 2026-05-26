@@ -17,31 +17,33 @@ while True:
 
     text = text.lower().strip()
 
+    # 🔧 FIX MISHEARD WAKE WORD
+    text = text.replace("title", "titan")
+
     print(f"You: {text}")
 
-    # EXIT ALWAYS WORKS
+    # -------------------------
+    # EXIT (HIGHEST PRIORITY)
+    # -------------------------
     if "exit" in text:
         speak("Shutting down Titan")
         print("Titan: Shutdown")
         break
 
-    # WAKE WORD OPTIONAL COMMAND MODE
-    command = text
-
+    # -------------------------
+    # WAKE WORD SYSTEM
+    # -------------------------
     if "titan" in text:
+
         command = text.replace("titan", "").strip()
 
         if not command:
             speak("Yes?")
             continue
 
-    else:
-        # if no wake word, ignore OR optionally allow direct mode
-        continue
+        response = assistant.process_command(command)
 
-    response = assistant.process_command(command)
+        print(f"Titan: {response}")
 
-    print(f"Titan: {response}")
-
-    if response:
-        speak(str(response))
+        if response:
+            speak(response)
