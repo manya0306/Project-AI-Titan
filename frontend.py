@@ -20,8 +20,13 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 app = ctk.CTk()
+app.attributes("-topmost", True)
 
-app.geometry("220x220")
+app.overrideredirect(True)
+
+app.configure(fg_color="black")
+
+app.geometry("100x100")
 app.title("Titan")
 app.resizable(False, False)
 
@@ -31,6 +36,20 @@ app.resizable(False, False)
 # -------------------------
 
 listening = False
+
+def close_app(event=None):
+    app.destroy()
+
+def start_move(event):
+    app.x = event.x
+    app.y = event.y
+
+
+def do_move(event):
+    x = app.winfo_x() + event.x - app.x
+    y = app.winfo_y() + event.y - app.y
+
+    app.geometry(f"+{x}+{y}")
 
 
 # -------------------------
@@ -135,7 +154,10 @@ orb_button = ctk.CTkButton(
 
 orb_button.place(relx=0.5, rely=0.5, anchor="center")
 
+orb_button.bind("<Button-1>", start_move)
+orb_button.bind("<B1-Motion>", do_move)
 
+orb_button.bind("<Button-3>", close_app)
 # -------------------------
 # RUN APP
 # -------------------------
