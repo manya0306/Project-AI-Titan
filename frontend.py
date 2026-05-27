@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import threading
+import time 
 
 from titan.core.voice import listen, speak
 from titan.core.assistant import TitanAssistant
@@ -36,6 +37,7 @@ app.resizable(False, False)
 # -------------------------
 
 listening = False
+animating = False
 
 def close_app(event=None):
     app.destroy()
@@ -50,6 +52,35 @@ def do_move(event):
     y = app.winfo_y() + event.y - app.y
 
     app.geometry(f"+{x}+{y}")
+
+def orb_animation():
+    global animating
+
+    grow = True
+
+    while animating:
+
+        try:
+
+            if grow:
+                orb_button.configure(
+                    width=130,
+                    height=130,
+                    fg_color="#00cfff"
+                )
+            else:
+                orb_button.configure(
+                    width=120,
+                    height=120,
+                    fg_color="#2563eb"
+                )
+
+            grow = not grow
+
+            time.sleep(0.5)
+
+        except:
+            break
 
 
 # -------------------------
@@ -107,6 +138,11 @@ def start_listening():
 
     listening = True
 
+    global animating
+    animating = True
+
+    threading.Thread(target=orb_animation, daemon=True).start()
+
     orb_button.configure(
         fg_color="#00c853",
         hover_color="#00e676"
@@ -120,7 +156,9 @@ def stop_listening():
     global listening
 
     listening = False
-
+    global animating
+    animating = False
+    
     orb_button.configure(
         fg_color="#2563eb",
         hover_color="#3b82f6"
