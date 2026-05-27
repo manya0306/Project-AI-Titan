@@ -3,20 +3,58 @@ from titan.utils.tokenizer import tokenize
 from titan.core.intent_map import INTENT_MAP
 
 
-def detect_intent(command: str):
+def detect_intent(command):
 
     command = command.lower()
 
-    if "open" in command:
-        return "open"
+    # OPEN
+    open_keywords = [
+        "open",
+        "launch",
+        "start"
+    ]
 
-    if "search" in command or "google" in command:
-        return "search"
+    # SEARCH
+    search_keywords = [
+        "search",
+        "find",
+        "look up"
+    ]
 
-    if "time" in command or "what is the time" in command:
-        return "time"
+    # CLOSE
+    close_keywords = [
+        "close",
+        "kill",
+        "terminate",
+        "quit"
+    ]
 
-    if "date" in command:
-        return "date"
+    # -------------------------
+    # DETECT OPEN
+    # -------------------------
+
+    for word in open_keywords:
+        if word in command:
+            return "open"
+
+    # -------------------------
+    # DETECT SEARCH
+    # -------------------------
+
+    for word in search_keywords:
+        if word in command:
+            return "search"
+
+    # -------------------------
+    # DETECT CLOSE
+    # -------------------------
+
+    for word in close_keywords:
+        if word in command:
+            return "close"
+
+    # -------------------------
+    # FALLBACK
+    # -------------------------
 
     return "unknown"

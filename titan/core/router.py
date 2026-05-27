@@ -1,18 +1,22 @@
 from titan.handlers.search_handler import handle_search
 from titan.handlers.open_handler import handle_open
 from titan.core.command_registry import COMMANDS
-
+from titan.handlers.close_handler import handle_close
 
 def route_command(intent, command, tokens):
 
     # -------------------------
     # 1. INTENT LAYER (PRIMARY)
     # -------------------------
+    
     if intent == "search":
         return handle_search(command)
 
     if intent == "open":
         return handle_open(command)
+    
+    if intent == "close":
+        return handle_close(command)
 
     # -------------------------
     # 2. TIME / DATE INTENTS (if you have them)

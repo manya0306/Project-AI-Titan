@@ -36,7 +36,6 @@ with mic as source:
 def listen():
     try:
         with mic as source:
-            print("Listening...")
 
             audio = recognizer.listen(
                 source,
@@ -45,6 +44,7 @@ def listen():
             )
 
         text = recognizer.recognize_google(audio)
+        text = text.replace("title", "titan")
         return text.lower().strip()
 
     except sr.WaitTimeoutError:

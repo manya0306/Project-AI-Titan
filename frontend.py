@@ -98,6 +98,8 @@ def titan_loop():
         if not text:
             continue
 
+        print(f"You: {text}")
+
         text = text.lower().strip()
 
         # Fix misheard wake word
@@ -134,6 +136,8 @@ def titan_loop():
 
 
 def start_listening():
+    print("Listening...")
+
     global listening
 
     listening = True
@@ -158,7 +162,7 @@ def stop_listening():
     listening = False
     global animating
     animating = False
-    
+
     orb_button.configure(
         fg_color="#2563eb",
         hover_color="#3b82f6"

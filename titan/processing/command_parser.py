@@ -5,7 +5,7 @@ def extract_open_target(command):
     command = command.lower()
 
     # remove trigger words cleanly
-    command = re.sub(r"\b(open|launch|start)\b", "", command)
+    command = re.sub(r"\b(open|launch|start|close|kill|terminate|quit)\b", "", command)
 
     # normalize ALL whitespace
     command = " ".join(command.split())
