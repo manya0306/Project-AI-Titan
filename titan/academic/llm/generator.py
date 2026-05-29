@@ -11,7 +11,7 @@ client = Groq(
 )
 
 
-def generate_answer(query, retrieved_chunks):
+def generate_answer(query, chunks, mode="learn"):
 
     context = "\n\n".join(retrieved_chunks)
 

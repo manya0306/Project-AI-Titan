@@ -12,6 +12,10 @@ all_chunks = []
 
 print("Loading PDFs...")
 
+
+# -------------------------
+# LOAD + CHUNK ALL PDFs
+# -------------------------
 for file in os.listdir(PDF_FOLDER):
 
     if file.endswith(".pdf"):
@@ -34,24 +38,49 @@ embeddings = create_embeddings(all_chunks)
 print("Titan Academic Ready.\n")
 
 
+# -------------------------
+# MAIN LOOP
+# -------------------------
 while True:
 
-    query = input("Ask Titan: ")
+    user_input = input("Ask Titan (or 'exam: topic'): ")
 
-    if query.lower() == "exit":
+    if user_input.lower() == "exit":
         break
 
+
+    # -------------------------
+    # MODE DETECTION
+    # -------------------------
+    if user_input.lower().startswith("exam:"):
+        mode = "exam"
+        query = user_input.replace("exam:", "").strip()
+    else:
+        mode = "learn"
+        query = user_input
+
+
+    # -------------------------
+    # RETRIEVAL
+    # -------------------------
     results = semantic_search(
         query,
         all_chunks,
         embeddings
     )
 
-    retrieved_chunks = [
-        r["text"] for r in results
-    ]
+    retrieved_chunks = [r["text"] for r in results]
 
-    answer = generate_answer(query, retrieved_chunks)
+
+    # -------------------------
+    # GENERATE ANSWER
+    # -------------------------
+    answer = generate_answer(
+        query,
+        retrieved_chunks,
+        mode
+    )
+
 
     print("\nTitan:\n")
     print(answer)
