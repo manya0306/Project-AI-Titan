@@ -13,36 +13,45 @@ client = Groq(
 
 def generate_answer(query, chunks, mode="learn"):
 
-    context = "\n\n".join(retrieved_chunks)
+    context = "\n\n".join(chunks)
 
-    prompt = f"""
-You are Titan, an academic AI assistant.
 
-Answer the user's question ONLY using the provided context.
-Answer clearly and completely in 4–6 lines.
-Do not copy chunks.
-Synthesize from context.
-If the answer is not present in the context, say:
-"I could not find that in the provided material."
+    if mode == "exam":
 
-QUESTION:
-{query}
+        prompt = f"""
+You are an exam preparation assistant.
 
-CONTEXT:
+Use ONLY the context below.
+
+Generate:
+1. Important questions
+2. Short answers (2-4 lines)
+3. MCQs with answers
+4. Key revision points
+
+Context:
 {context}
+
+Topic: {query}
 """
 
+    else:
+
+        prompt = f"""
+Answer the question clearly using only the context.
+
+Context:
+{context}
+
+Question: {query}
+"""
+
+
     completion = client.chat.completions.create(
-
         model="llama-3.1-8b-instant",
-
         messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "user", "content": prompt}
         ],
-
         temperature=0.3
     )
 
